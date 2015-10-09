@@ -60,3 +60,38 @@ BEGIN
   DELETE FROM BANK_USER_DOCS WHERE DOC_USER_ID = USER_TO_DELETE_ID;
   DELETE FROM BANK_USERS WHERE BANK_USERS.USER_ID = USER_TO_DELETE_ID;
 END;
+
+--4)
+
+create or replace procedure
+droptableonclsstartingwitht
+is
+  c INTEGER;
+begin
+  SELECT COUNT(*) INTO c FROM BANK_USER_INFO WHERE USER_LAST_NAME LIKE 'T%';
+  IF c = 0
+  then
+    return;
+  end if;
+
+  execute immediate 'drop table some_table';
+end;
+
+create table some_table (i integer);
+
+create role bank_admin_role;
+grant bank_admin_role to bank_admin_user;
+grant execute on droptableonclsstartingwitht to bank_admin_role;
+
+
+grant execute on DELETE_USER_WITH_NO_CREDITS to BANK_OPERATOR_ROLE;
+
+grant BANK_OPERATOR_ROLE to BANK_OPERATOR_USER;
+
+create role BANK_CLIENT_ROLE;
+
+grant execute on SHOW_MY_ACCOUNTS to BANK_CLIENT_ROLE;
+
+grant BANK_CLIENT_ROLE to BANK_CLIENT_USER;
+
+
