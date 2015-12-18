@@ -51,4 +51,11 @@ where ACTION_NAME='LOGON'
 ORDER BY EXTENDED_TIMESTAMP desc
 ;
 
+-- Get reads of user first name
 
+select
+  *
+from
+  sys.DBA_FGA_AUDIT_TRAIL
+where
+  POLICY_NAME = 'B_BUDOC_NAME_ACC_AUD';
