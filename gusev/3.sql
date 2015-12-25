@@ -2,7 +2,9 @@
 CREATE OR REPLACE VIEW my_calls_view
   AS SELECT calls.*
   FROM calls
-  JOIN contracts ON (calls.callerid = contracts.contractid)
+  JOIN contracts ON (
+    calls.callerid = contracts.contractid
+    OR calls.receiverid = contracts.contractid)
   JOIN users ON users.userid = contracts.userid
   WHERE users.username = (SELECT user FROM dual);
 
