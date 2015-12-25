@@ -62,8 +62,9 @@ CREATE OR REPLACE VIEW another_dispatcher_view
 GRANT SELECT ON another_dispatcher_view TO dispatcher;
 
 --5
-CREATE MATERIALIZED VIEW old_calls
-  AS SELECT *
-  FROM calls;
+CREATE OR REPLACE VIEW client_view
+  AS SELECT contracts.*
+  FROM contracts
+  WHERE contracts.lastaction < ADD_MONTHS(TRUNC(SYSDATE), -24);
 
-GRANT DELETE ON old_calls TO gusev;
+GRANT SELECT, DELETE ON client_view TO dispatcher;
