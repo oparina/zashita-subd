@@ -53,6 +53,8 @@ CREATE OR REPLACE VIEW dispatcher_view
   
 GRANT SELECT ON dispatcher_view TO dispatcher;
 
+SELECT * FROM gusev.dispatcher_view;
+
 --2
 CREATE OR REPLACE VIEW another_dispatcher_view
   AS SELECT contracts.*, users.firstname, users.lastname
@@ -61,6 +63,8 @@ CREATE OR REPLACE VIEW another_dispatcher_view
   
 GRANT SELECT ON another_dispatcher_view TO dispatcher;
 
+SELECT * FROM gusev.another_dispatcher_view;
+
 --5
 CREATE OR REPLACE VIEW client_view
   AS SELECT contracts.*
@@ -68,3 +72,6 @@ CREATE OR REPLACE VIEW client_view
   WHERE contracts.lastaction < ADD_MONTHS(TRUNC(SYSDATE), -24);
 
 GRANT SELECT, DELETE ON client_view TO dispatcher;
+
+SELECT * FROM gusev.client_view;
+DELETE FROM gusev.client_view WHERE contractid = 1;
