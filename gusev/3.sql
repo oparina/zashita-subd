@@ -1,44 +1,13 @@
 --1
-CREATE OR REPLACE TYPE callInfo AS OBJECT (
-  callid NUMBER,
-  calldate DATE,
-  receiverid NUMBER(4),
-  callerid NUMBER(4),
-  callduration NUMBER
-);
+CREATE OR REPLACE VIEW my_calls_view
+  AS SELECT calls.*
+  FROM calls
+  JOIN contracts ON (calls.callerid = contracts.contractid)
+  JOIN users ON users.userid = contracts.userid
+  WHERE users.username = (SELECT user FROM dual);
 
-CREATE OR REPLACE TYPE callsSet AS TABLE OF callInfo;
-
-CREATE OR REPLACE FUNCTION showCalls
-  RETURN callsSet PIPELINED
-IS
-  out_row callInfo := callInfo(NULL,NULL,NULL,NULL,NULL);
-BEGIN
-  FOR item IN
-    (SELECT callid, calldate, receiverid, callerid, callduration FROM calls
-      WHERE
-        calls.callerid = 
-          (SELECT users.userid 
-            FROM users
-            WHERE users.username = (SELECT user FROM dual))
-      OR
-        calls.receiverid = 
-          (SELECT users.userid 
-            FROM users
-            WHERE users.username = (SELECT user FROM dual)))
-  LOOP
-    out_row.callid := item.callid;
-    out_row.calldate := item.calldate;
-    out_row.receiverid := item.receiverid;
-    out_row.callerid := item.callerid;
-    out_row.callduration := item.callduration;
-    PIPE ROW(out_row);
-  END LOOP;
-END;
-
-CREATE ROLE userRole NOT IDENTIFIED;
-GRANT EXECUTE ON showCalls TO userRole;
-GRANT userRole TO gusev;
+GRANT SELECT ON my_calls_view TO dispatcher;
+SELECT * FROM my_calls_view;
 
 --3
 CREATE USER dispatcher IDENTIFIED BY pass;
