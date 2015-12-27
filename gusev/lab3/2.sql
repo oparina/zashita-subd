@@ -1,4 +1,4 @@
-REATE OR REPLACE VIEW dispatcher_view
+CREATE OR REPLACE VIEW dispatcher_view
 AS
   SELECT
     users.first_name,

@@ -1,4 +1,4 @@
-EATE OR REPLACE VIEW client_view
+CREATE OR REPLACE VIEW client_view
 AS
   SELECT (calls.*)
   FROM calls
