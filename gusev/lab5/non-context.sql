@@ -1,3 +1,4 @@
+--code for oracle
 CREATE USER default_user IDENTIFIED BY pass;
 GRANT CREATE SESSION TO default_user;
 GRANT SELECT ON gusev.users TO default_user;
