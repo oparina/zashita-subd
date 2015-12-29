@@ -1,0 +1,33 @@
+
+CREATE  OR REPLACE CONTEXT worker_role_context USING gusev.worker_role;
+
+CREATE   OR   REPLACE   PROCEDURE   worker_role   (
+  P_USERNAME IN VARCHAR2
+  DEFAULT SYS_CONTEXT('USERENV','SESSION_USER')
+) AS
+    A NUMBER;
+    B NUMBER;
+    C VARCHAR2(255) DEFAULT 'WORKER_ROLE_CONTEXT';
+  BEGIN
+    SELECT COUNT(*) INTO B FROM DUAL
+      WHERE EXISTS
+        (SELECT NULL
+          FROM GUSEV.USERS
+          JOIN GUSEV.WORKERS ON workers.contractid = users.userid
+          WHERE (users.USERNAME = P_USERNAME) and (workers.position = 'CEO'));
+    IF (B<>0) THEN
+      DBMS_SESSION.SET_CONTEXT(C, 'ROLENAME', 'CEO');
+    ELSE
+      DBMS_SESSION.SET_CONTEXT(C, 'ROLENAME', 'Manager');
+  END IF;
+END worker_role;
+/
+ 
+CREATE OR REPLACE TRIGGER SEC_LOG_TRIGGER
+AFTER LOGON ON DATABASE
+BEGIN
+  worker_role;
+END;
+/
+
+SELECT * FROM SYS.v_$context;
