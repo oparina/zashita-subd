@@ -22,11 +22,3 @@ CREATE OR REPLACE FUNCTION _check_time()
 CREATE TRIGGER check_time_trigger
   BEFORE INSERT OR UPDATE OR DELETE ON contracts
   EXECUTE PROCEDURE _check_time();
-
-CREATE TRIGGER check_time_trigger
-  BEFORE INSERT OR UPDATE OR DELETE ON users
-  EXECUTE PROCEDURE _check_time();
-
-CREATE TRIGGER check_time_trigger
-  BEFORE INSERT OR UPDATE OR DELETE ON calls
-  EXECUTE PROCEDURE _check_time();
